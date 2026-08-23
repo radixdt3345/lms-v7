@@ -1,0 +1,34 @@
+name: E2E Tests (Manual Trigger Only)
+
+# NEVER add push/pull_request triggers here.
+# E2E runs against staging — staging is not available in PR CI.
+on:
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: Staging base URL
+        required: true
+        default: https://staging.lms.example.com
+
+jobs:
+  e2e:
+    name: Playwright E2E
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm ci
+        working-directory: frontend
+      - run: npx playwright install --with-deps chromium firefox
+        working-directory: frontend
+      - run: npx playwright test
+        working-directory: frontend
+        env:
+          BASE_URL: ${{ github.event.inputs.base_url }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: frontend/playwright-report/

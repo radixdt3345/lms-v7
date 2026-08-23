@@ -1,0 +1,32 @@
+# .NET
+*.user
+*.suo
+.vs/
+bin/
+obj/
+*.nupkg
+*.snupkg
+*.log
+TestResults/
+coverage/
+
+# Node / Frontend
+node_modules/
+dist/
+.vite/
+.env
+.env.local
+.env.*.local
+npm-debug.log*
+
+# IDE
+.idea/
+.vscode/
+*.DS_Store
+
+# Docker
+pgdata/
+
+# Playwright
+playwright-report/
+test-results/
