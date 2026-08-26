@@ -20,6 +20,7 @@ public sealed class User
     public string Status { get; set; } = "Active";
 
     public Guid? DepartmentId { get; set; }
+    public Department? Department { get; set; }
 
     /// <summary>Consecutive failed login attempts. Resets to 0 on successful login or unlock.</summary>
     public int FailedAttempts { get; set; }
