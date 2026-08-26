@@ -12,6 +12,7 @@ public class LmsDbContext : DbContext
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
     public DbSet<Rs256Key> Rs256Keys => Set<Rs256Key>();
     public DbSet<Department> Departments => Set<Department>();
+    public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
