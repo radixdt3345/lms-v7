@@ -78,6 +78,7 @@ sys.exit(0 if lc >= 80 else 1)
   frontend:
     name: Frontend — Lint, Type-check, Unit Tests
     runs-on: ubuntu-latest
+    if: hashFiles('frontend/package.json') != ''
     defaults:
       run:
         working-directory: frontend
