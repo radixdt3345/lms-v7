@@ -21,6 +21,25 @@ import { getSsoLoginUrl } from '../../api/authenticationApi';
  * data-testid map: btn-sso-login, input-email, input-password,
  *                  btn-local-login, alert-login-error, notice-account-locked
  */
+
+/** Decode role from JWT without verifying signature (routing only). */
+function getRoleFromToken(token: string): string | null {
+  try {
+    const b64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    const payload = JSON.parse(atob(b64)) as Record<string, unknown>;
+    return (payload['role'] as string) ?? null;
+  } catch {
+    return null;
+  }
+}
+
+/** Return the post-login destination route based on user role. */
+function getDashboardRoute(role: string | null): string {
+  if (role === 'HR_ADMIN' || role === 'SUPER_ADMIN') return '/admin/users';
+  // EMPLOYEE / MANAGER: leave management dashboard (built in F-02)
+  return '/';
+}
+
 export default function LoginPage() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
@@ -39,7 +58,9 @@ export default function LoginPage() {
     setAccountLocked(false);
     const result = await dispatch(loginAsync({ email, password }));
     if (loginAsync.fulfilled.match(result)) {
-      navigate('/dashboard');
+      // Decode role from the returned JWT and navigate accordingly
+      const role = getRoleFromToken(result.payload.accessToken);
+      navigate(getDashboardRoute(role));
     } else {
       const msg = ((result.payload as string) ?? '').toLowerCase();
       if (msg.includes('locked')) {
