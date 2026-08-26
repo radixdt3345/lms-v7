@@ -248,6 +248,10 @@ partial class LmsDbContextModelSnapshot : ModelSnapshot
                     .HasColumnName("created_at")
                     .HasDefaultValueSql("NOW()");
 
+                b.Property<DateOnly?>("DateOfJoining")
+                    .HasColumnType("date")
+                    .HasColumnName("date_of_joining");
+
                 b.Property<DateTime?>("DeletedAt")
                     .HasColumnType("timestamptz")
                     .HasColumnName("deleted_at");
@@ -267,6 +271,10 @@ partial class LmsDbContextModelSnapshot : ModelSnapshot
                     .HasColumnName("failed_attempts")
                     .HasDefaultValue(0);
 
+                b.Property<string>("JobTitle")
+                    .HasColumnType("varchar")
+                    .HasColumnName("job_title");
+
                 b.Property<DateTime?>("LockedAt")
                     .HasColumnType("timestamptz")
                     .HasColumnName("locked_at");
@@ -279,6 +287,14 @@ partial class LmsDbContextModelSnapshot : ModelSnapshot
                 b.Property<string>("PasswordHash")
                     .HasColumnType("varchar")
                     .HasColumnName("password_hash");
+
+                b.Property<string>("Phone")
+                    .HasColumnType("varchar")
+                    .HasColumnName("phone");
+
+                b.Property<Guid?>("ReportingManagerId")
+                    .HasColumnType("uuid")
+                    .HasColumnName("reporting_manager_id");
 
                 b.Property<string>("Role")
                     .IsRequired()
@@ -304,6 +320,7 @@ partial class LmsDbContextModelSnapshot : ModelSnapshot
 
                 b.HasIndex("DepartmentId").HasDatabaseName("idx_users_department_id");
                 b.HasIndex("Email").IsUnique().HasDatabaseName("idx_users_email");
+                b.HasIndex("ReportingManagerId").HasDatabaseName("idx_users_reporting_manager_id");
                 b.HasIndex("Status").HasDatabaseName("idx_users_status");
 
                 b.ToTable("users", (string)null);
@@ -341,8 +358,16 @@ partial class LmsDbContextModelSnapshot : ModelSnapshot
                     .HasConstraintName("fk_users_departments")
                     .OnDelete(DeleteBehavior.SetNull);
 
+                b.HasOne("LMS.Infrastructure.Data.Entities.User", "ReportingManager")
+                    .WithMany("DirectReports")
+                    .HasForeignKey("ReportingManagerId")
+                    .HasConstraintName("fk_users_reporting_manager")
+                    .OnDelete(DeleteBehavior.SetNull);
+
                 b.Navigation("Department");
+                b.Navigation("DirectReports");
                 b.Navigation("RefreshTokens");
+                b.Navigation("ReportingManager");
             }
         );
 

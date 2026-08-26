@@ -37,5 +37,15 @@ public sealed class User
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 
+    // F-02 Employee profile fields
+    public string? Phone { get; set; }
+    public string? JobTitle { get; set; }
+    public DateOnly? DateOfJoining { get; set; }
+
+    /// <summary>Self-referential FK. Setting this promotes the referenced user to MANAGER automatically.</summary>
+    public Guid? ReportingManagerId { get; set; }
+    public User? ReportingManager { get; set; }
+    public ICollection<User> DirectReports { get; set; } = new List<User>();
+
     public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 }

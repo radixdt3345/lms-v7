@@ -109,6 +109,40 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
             .ValueGeneratedOnAddOrUpdate()
             .IsRequired();
 
+        // F-02 Employee profile columns
+        builder
+            .Property(u => u.Phone)
+            .HasColumnName("phone")
+            .HasColumnType("varchar");
+
+        builder
+            .Property(u => u.JobTitle)
+            .HasColumnName("job_title")
+            .HasColumnType("varchar");
+
+        builder
+            .Property(u => u.DateOfJoining)
+            .HasColumnName("date_of_joining")
+            .HasColumnType("date");
+
+        builder
+            .Property(u => u.ReportingManagerId)
+            .HasColumnName("reporting_manager_id")
+            .HasColumnType("uuid");
+
+        builder
+            .HasIndex(u => u.ReportingManagerId)
+            .HasDatabaseName("idx_users_reporting_manager_id");
+
+        // Self-referential FK: employee -> reporting manager
+        // SetNull so deactivating a manager does not cascade-delete reports
+        builder
+            .HasOne(u => u.ReportingManager)
+            .WithMany(u => u.DirectReports)
+            .HasForeignKey(u => u.ReportingManagerId)
+            .HasConstraintName("fk_users_reporting_manager")
+            .OnDelete(DeleteBehavior.SetNull);
+
         builder
             .HasMany(u => u.RefreshTokens)
             .WithOne(rt => rt.User)
