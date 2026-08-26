@@ -3,13 +3,14 @@ using LMS.Infrastructure.AuditLogs;
 using LMS.Infrastructure.Auth;
 using LMS.Infrastructure.Data;
 using LMS.Infrastructure.Departments;
+using LMS.Infrastructure.Employees;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ── Database ──────────────────────────────────────────────────────────────────
+// ── Database ────────────────────────────────────────────────────────────────────────────────
 var connectionString =
     builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException(
@@ -19,20 +20,18 @@ var connectionString =
 
 builder.Services.AddDbContext<LmsDbContext>(options => options.UseNpgsql(connectionString));
 
-// ── Application services ──────────────────────────────────────────────────────
+// ── Application services ────────────────────────────────────────────────────────────────
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IAuditLogService, AuditLogService>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 
 // Named HttpClient for AuthService (Azure AD token exchanges)
 builder.Services.AddHttpClient<IAuthService, AuthService>();
 
-// ── JWT Bearer authentication ─────────────────────────────────────────────────
-// The RSA public key is loaded dynamically from the active Rs256Key in the database.
-// We configure a custom token validation parameters factory so the key can rotate
-// without restarting the application.
+// ── JWT Bearer authentication ─────────────────────────────────────────────────────────────
 builder
     .Services.AddAuthentication(options =>
     {
@@ -50,12 +49,8 @@ builder
             ValidateLifetime = true,
             ClockSkew = TimeSpan.FromSeconds(30),
             ValidateIssuerSigningKey = true,
-            // The signing key is resolved at token-validation time so key rotation
-            // is reflected immediately without restart.
             IssuerSigningKeyResolver = (_, _, kid, _) =>
             {
-                // Build a temporary scope to resolve the db and fetch the active key.
-                // This runs synchronously inside the JWT middleware; DbContext is fast here.
                 var sp = builder.Services.BuildServiceProvider();
                 using var scope = sp.CreateScope();
                 var db = scope.ServiceProvider.GetRequiredService<LmsDbContext>();
@@ -110,17 +105,17 @@ builder
 
 builder.Services.AddAuthorization();
 
-// ── Controllers + ProblemDetails ─────────────────────────────────────────────
+// ── Controllers + ProblemDetails ────────────────────────────────────────────────────────────
 builder.Services.AddControllers();
 builder.Services.AddProblemDetails();
 
-// ── Health checks ─────────────────────────────────────────────────────────────
+// ── Health checks ─────────────────────────────────────────────────────────────────────────────
 builder.Services.AddHealthChecks();
 
-// ─────────────────────────────────────────────────────────────────────────────
+// ──────────────────────────────────────────────────────────────────────────────────
 var app = builder.Build();
 
-// ── Middleware pipeline ────────────────────────────────────────────────────────
+// ── Middleware pipeline ──────────────────────────────────────────────────────────────────────
 app.UseExceptionHandler();
 
 if (app.Environment.IsDevelopment())
@@ -134,8 +129,7 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapHealthChecks("/health");
 
-// ── Startup tasks ─────────────────────────────────────────────────────────────
-// Ensure an active RS256 signing key exists before accepting traffic.
+// ── Startup tasks ─────────────────────────────────────────────────────────────────────────────
 using (var scope = app.Services.CreateScope())
 {
     var jwt = scope.ServiceProvider.GetRequiredService<IJwtService>();
