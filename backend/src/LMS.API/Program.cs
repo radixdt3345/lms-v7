@@ -1,3 +1,4 @@
+using LMS.Infrastructure.LeaveApplications;
 using System.Security.Cryptography;
 using LMS.Infrastructure.AuditLogs;
 using LMS.Infrastructure.Auth;
@@ -33,6 +34,7 @@ builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<ILeaveTypeService, LeaveTypeService>();
 builder.Services.AddScoped<IPublicHolidayService, PublicHolidayService>();
 builder.Services.AddScoped<ILeaveBalanceService, LeaveBalanceService>();
+builder.Services.AddScoped<ILeaveApplicationService, LeaveApplicationService>();
 
 // Named HttpClient for AuthService (Azure AD token exchanges)
 builder.Services.AddHttpClient<IAuthService, AuthService>();
@@ -143,3 +145,4 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
+
