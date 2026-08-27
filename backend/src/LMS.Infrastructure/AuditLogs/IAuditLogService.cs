@@ -11,4 +11,10 @@ public interface IAuditLogService
         string? changes = null,
         CancellationToken ct = default
     );
+
+    /// <summary>Search audit logs with optional filters and pagination.</summary>
+    Task<(IReadOnlyList<AuditLogDto> Items, int TotalCount)> SearchAsync(
+        AuditLogSearchParams p,
+        CancellationToken ct = default
+    );
 }
