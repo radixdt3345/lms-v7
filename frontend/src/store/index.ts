@@ -4,6 +4,7 @@ import employeeReducer from './employeeSlice';
 import leaveTypeReducer from './leaveTypeSlice';
 import { auditLogReducer } from './auditLogSlice';
 import { leaveBalanceReducer } from './leaveBalanceSlice';
+import { compOffReducer } from './compOffSlice';
 import { leaveApplicationReducer } from './leaveApplicationSlice';
 
 export const store = configureStore({
@@ -14,8 +15,10 @@ export const store = configureStore({
     auditLog: auditLogReducer,
     leaveBalance: leaveBalanceReducer,
     leaveApplication: leaveApplicationReducer,
+    compOff: compOffReducer,
   },
 });
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
+
