@@ -1,3 +1,4 @@
+using LMS.Infrastructure.Reports;
 using LMS.Infrastructure.Notifications;
 using LMS.Infrastructure.CompOff;
 using LMS.Infrastructure.Approvals;
