@@ -5,6 +5,7 @@ using LMS.Infrastructure.Data;
 using LMS.Infrastructure.Departments;
 using LMS.Infrastructure.Employees;
 using LMS.Infrastructure.LeaveTypes;
+using LMS.Infrastructure.PublicHolidays;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -29,6 +30,7 @@ builder.Services.AddScoped<IAuditLogService, AuditLogService>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<ILeaveTypeService, LeaveTypeService>();
+builder.Services.AddScoped<IPublicHolidayService, PublicHolidayService>();
 
 // Named HttpClient for AuthService (Azure AD token exchanges)
 builder.Services.AddHttpClient<IAuthService, AuthService>();
