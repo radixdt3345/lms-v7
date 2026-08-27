@@ -21,6 +21,7 @@ public class LmsDbContext : DbContext
     public DbSet<CompOffRequest> CompOffRequests => Set<CompOffRequest>();
     public DbSet<ApprovalHistory> ApprovalHistories => Set<ApprovalHistory>();
     public DbSet<Notification> Notifications => Set<Notification>();
+    public DbSet<ScheduledJobLog> ScheduledJobLogs;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
