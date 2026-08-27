@@ -5,6 +5,8 @@ import UserManagementPage from './pages/AuthenticationAndIdentity/UserManagement
 import EmployeeManagementPage from './pages/EmployeeManagement/EmployeeManagementPage';
 import MyProfilePage from './pages/EmployeeManagement/MyProfilePage';
 import MyTeamPage from './pages/EmployeeManagement/MyTeamPage';
+import LeaveTypeManagementPage from './pages/LeaveTypeManagement/LeaveTypeManagementPage';
+import PublicHolidayManagementPage from './pages/PublicHolidayManagement/PublicHolidayManagementPage';
 import AuditTrailPage from './pages/AuditTrail/AuditTrailPage';
 import type { RootState } from './store';
 
@@ -50,6 +52,26 @@ export default function App() {
         element={
           <ProtectedRoute>
             <MyTeamPage />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* F-04: Leave Type Management */}
+      <Route
+        path="/admin/leave-types"
+        element={
+          <ProtectedRoute>
+            <LeaveTypeManagementPage />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* F-10: Public Holiday Management */}
+      <Route
+        path="/admin/holidays"
+        element={
+          <ProtectedRoute>
+            <PublicHolidayManagementPage />
           </ProtectedRoute>
         }
       />
