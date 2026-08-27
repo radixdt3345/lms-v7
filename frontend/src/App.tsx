@@ -1,3 +1,4 @@
+import EmployeeDashboardPage from "./pages/Dashboard/EmployeeDashboardPage";
 import ApprovalQueuePage from "./pages/Approvals/ApprovalQueuePage";
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -41,6 +42,7 @@ export default function App() {
       <Route path="/admin/comp-off" element={<ProtectedRoute><CompOffManagementPage /></ProtectedRoute>} />
       <Route path="/" element={<Navigate to="/login" replace />} />
       <Route path="/admin/approvals" element={<ApprovalQueuePage />} />
+  <Route path="/dashboard" element={<EmployeeDashboardPage />} />
 </Routes>
   );
 }

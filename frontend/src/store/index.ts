@@ -1,3 +1,4 @@
+import { dashboardReducer } from "./dashboardSlice";
 import { notificationsReducer } from "./notificationsSlice";
 import { approvalReducer } from "./approvalSlice";
 import { configureStore } from '@reduxjs/toolkit';
@@ -21,6 +22,7 @@ export const store = configureStore({
     compOff: compOffReducer,
   approvals: approvalReducer,
   notifications: notificationsReducer,
+  dashboard: dashboardReducer,
   },
 });
 
