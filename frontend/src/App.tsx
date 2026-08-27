@@ -2,7 +2,9 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import LoginPage from './pages/AuthenticationAndIdentity/LoginPage';
 import UserManagementPage from './pages/AuthenticationAndIdentity/UserManagementPage';
-import DepartmentManagementPage from './pages/DepartmentManagement/DepartmentManagementPage';
+import EmployeeManagementPage from './pages/EmployeeManagement/EmployeeManagementPage';
+import MyProfilePage from './pages/EmployeeManagement/MyProfilePage';
+import MyTeamPage from './pages/EmployeeManagement/MyTeamPage';
 import type { RootState } from './store';
 
 const ProtectedRoute = ({ children }: { children: React.ReactElement }) => {
@@ -14,6 +16,8 @@ export default function App() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
+
+      {/* F-01: Auth & Identity */}
       <Route
         path="/admin/users"
         element={
@@ -22,14 +26,33 @@ export default function App() {
           </ProtectedRoute>
         }
       />
+
+      {/* F-02: Employee Management */}
       <Route
-        path="/admin/departments"
+        path="/admin/employees"
         element={
           <ProtectedRoute>
-            <DepartmentManagementPage />
+            <EmployeeManagementPage />
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <MyProfilePage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/team"
+        element={
+          <ProtectedRoute>
+            <MyTeamPage />
+          </ProtectedRoute>
+        }
+      />
+
       <Route path="/" element={<Navigate to="/login" replace />} />
     </Routes>
   );
