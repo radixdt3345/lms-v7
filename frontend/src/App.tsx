@@ -5,7 +5,7 @@ import UserManagementPage from './pages/AuthenticationAndIdentity/UserManagement
 import EmployeeManagementPage from './pages/EmployeeManagement/EmployeeManagementPage';
 import MyProfilePage from './pages/EmployeeManagement/MyProfilePage';
 import MyTeamPage from './pages/EmployeeManagement/MyTeamPage';
-import LeaveTypeManagementPage from './pages/LeaveTypeManagement/LeaveTypeManagementPage';
+import AuditTrailPage from './pages/AuditTrail/AuditTrailPage';
 import type { RootState } from './store';
 
 const ProtectedRoute = ({ children }: { children: React.ReactElement }) => {
@@ -54,12 +54,12 @@ export default function App() {
         }
       />
 
-      {/* F-04: Leave Type Management */}
+      {/* F-13: Audit Trail — HR_ADMIN / SUPER_ADMIN only */}
       <Route
-        path="/admin/leave-types"
+        path="/admin/audit-trail"
         element={
           <ProtectedRoute>
-            <LeaveTypeManagementPage />
+            <AuditTrailPage />
           </ProtectedRoute>
         }
       />
