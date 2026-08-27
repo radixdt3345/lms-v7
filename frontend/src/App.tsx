@@ -7,6 +7,7 @@ import MyProfilePage from './pages/EmployeeManagement/MyProfilePage';
 import MyTeamPage from './pages/EmployeeManagement/MyTeamPage';
 import LeaveTypeManagementPage from './pages/LeaveTypeManagement/LeaveTypeManagementPage';
 import PublicHolidayManagementPage from './pages/PublicHolidayManagement/PublicHolidayManagementPage';
+import AuditTrailPage from './pages/AuditTrail/AuditTrailPage';
 import type { RootState } from './store';
 
 const ProtectedRoute = ({ children }: { children: React.ReactElement }) => {
@@ -71,6 +72,16 @@ export default function App() {
         element={
           <ProtectedRoute>
             <PublicHolidayManagementPage />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* F-13: Audit Trail — HR_ADMIN / SUPER_ADMIN only */}
+      <Route
+        path="/admin/audit-trail"
+        element={
+          <ProtectedRoute>
+            <AuditTrailPage />
           </ProtectedRoute>
         }
       />
