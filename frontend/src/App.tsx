@@ -6,6 +6,7 @@ import EmployeeManagementPage from './pages/EmployeeManagement/EmployeeManagemen
 import MyProfilePage from './pages/EmployeeManagement/MyProfilePage';
 import MyTeamPage from './pages/EmployeeManagement/MyTeamPage';
 import LeaveTypeManagementPage from './pages/LeaveTypeManagement/LeaveTypeManagementPage';
+import PublicHolidayManagementPage from './pages/PublicHolidayManagement/PublicHolidayManagementPage';
 import type { RootState } from './store';
 
 const ProtectedRoute = ({ children }: { children: React.ReactElement }) => {
@@ -60,6 +61,16 @@ export default function App() {
         element={
           <ProtectedRoute>
             <LeaveTypeManagementPage />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* F-10: Public Holiday Management */}
+      <Route
+        path="/admin/holidays"
+        element={
+          <ProtectedRoute>
+            <PublicHolidayManagementPage />
           </ProtectedRoute>
         }
       />
