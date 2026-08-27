@@ -1,3 +1,4 @@
+using LMS.Infrastructure.Dashboard;
 using LMS.Infrastructure.Notifications;
 using LMS.Infrastructure.CompOff;
 using LMS.Infrastructure.Approvals;
@@ -41,6 +42,7 @@ builder.Services.AddScoped<ILeaveApplicationService, LeaveApplicationService>();
 builder.Services.AddScoped<ICompOffService, CompOffService>();
 builder.Services.AddScoped<IApprovalService, ApprovalService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<IDashboardService, DashboardService>();
 
 // Named HttpClient for AuthService (Azure AD token exchanges)
 builder.Services.AddHttpClient<IAuthService, AuthService>();
