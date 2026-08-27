@@ -1,4 +1,5 @@
 using LMS.Infrastructure.CompOff;
+using LMS.Infrastructure.Approvals;
 using LMS.Infrastructure.LeaveApplications;
 using System.Security.Cryptography;
 using LMS.Infrastructure.AuditLogs;
@@ -37,6 +38,7 @@ builder.Services.AddScoped<IPublicHolidayService, PublicHolidayService>();
 builder.Services.AddScoped<ILeaveBalanceService, LeaveBalanceService>();
 builder.Services.AddScoped<ILeaveApplicationService, LeaveApplicationService>();
 builder.Services.AddScoped<ICompOffService, CompOffService>();
+builder.Services.AddScoped<IApprovalService, ApprovalService>();
 
 // Named HttpClient for AuthService (Azure AD token exchanges)
 builder.Services.AddHttpClient<IAuthService, AuthService>();
@@ -147,5 +149,3 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
-
-
