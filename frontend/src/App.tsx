@@ -1,3 +1,4 @@
+import ApprovalQueuePage from "./pages/Approvals/ApprovalQueuePage";
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import LoginPage from './pages/AuthenticationAndIdentity/LoginPage';
@@ -39,7 +40,7 @@ export default function App() {
             <Route path="/comp-off" element={<ProtectedRoute><MyCompOffPage /></ProtectedRoute>} />
       <Route path="/admin/comp-off" element={<ProtectedRoute><CompOffManagementPage /></ProtectedRoute>} />
       <Route path="/" element={<Navigate to="/login" replace />} />
-    </Routes>
+      <Route path="/admin/approvals" element={<ApprovalQueuePage />} />
+</Routes>
   );
 }
-
