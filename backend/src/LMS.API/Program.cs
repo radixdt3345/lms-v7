@@ -133,6 +133,14 @@ builder.Services.AddProblemDetails();
 builder.Services.AddHealthChecks();
 
 // ──────────────────────────────────────────────────────────────────────────────
+builder.Services.AddCors(options =>
+    options.AddDefaultPolicy(policy =>
+        policy.WithOrigins(
+                (builder.Configuration["AllowedOrigins"] ?? "http://localhost:5173").Split(","))
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials()));
+
 var app = builder.Build();
 
 // ── Middleware pipeline ──────────────────────────────────────────────────────────────────────
@@ -143,6 +151,8 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
+app.UseHttpsRedirection();
+app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 
