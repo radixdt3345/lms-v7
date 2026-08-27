@@ -13,6 +13,7 @@ import MyLeaveBalancePage from './pages/LeaveBalance/MyLeaveBalancePage';
 import LeaveBalanceManagementPage from './pages/LeaveBalance/LeaveBalanceManagementPage';
 import MyLeaveApplicationsPage from './pages/LeaveApplication/MyLeaveApplicationsPage';
 import LeaveApplicationManagementPage from './pages/LeaveApplication/LeaveApplicationManagementPage';
+import ReportsPage from './pages/Reports/ReportsPage';
 import MyCompOffPage from './pages/CompOff/MyCompOffPage';
 import CompOffManagementPage from './pages/CompOff/CompOffManagementPage';
 import type { RootState } from './store';
