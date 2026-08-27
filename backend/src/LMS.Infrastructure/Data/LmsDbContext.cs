@@ -20,6 +20,7 @@ public class LmsDbContext : DbContext
     public DbSet<LeaveApplication> LeaveApplications => Set<LeaveApplication>();
     public DbSet<CompOffRequest> CompOffRequests => Set<CompOffRequest>();
     public DbSet<ApprovalHistory> ApprovalHistories => Set<ApprovalHistory>();
+    public DbSet<Notification> Notifications => Set<Notification>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
