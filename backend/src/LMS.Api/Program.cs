@@ -4,6 +4,7 @@ using LMS.Infrastructure.Auth;
 using LMS.Infrastructure.Data;
 using LMS.Infrastructure.Departments;
 using LMS.Infrastructure.Employees;
+using LMS.Infrastructure.LeaveTypes;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -27,6 +28,7 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IAuditLogService, AuditLogService>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<ILeaveTypeService, LeaveTypeService>();
 
 // Named HttpClient for AuthService (Azure AD token exchanges)
 builder.Services.AddHttpClient<IAuthService, AuthService>();
@@ -112,7 +114,7 @@ builder.Services.AddProblemDetails();
 // ── Health checks ─────────────────────────────────────────────────────────────────────────────
 builder.Services.AddHealthChecks();
 
-// ──────────────────────────────────────────────────────────────────────────────────
+// ──────────────────────────────────────────────────────────────────────────────
 var app = builder.Build();
 
 // ── Middleware pipeline ──────────────────────────────────────────────────────────────────────
