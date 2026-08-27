@@ -15,6 +15,8 @@ public class LmsDbContext : DbContext
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
     public DbSet<LeaveType> LeaveTypes { get; set; } = null!;
     public DbSet<PublicHoliday> PublicHolidays => Set<PublicHoliday>();
+    public DbSet<LeaveBalance> LeaveBalances => Set<LeaveBalance>();
+    public DbSet<CompOffCredit> CompOffCredits => Set<CompOffCredit>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
