@@ -19,6 +19,7 @@ public class LmsDbContext : DbContext
     public DbSet<CompOffCredit> CompOffCredits => Set<CompOffCredit>();
     public DbSet<LeaveApplication> LeaveApplications => Set<LeaveApplication>();
     public DbSet<CompOffRequest> CompOffRequests => Set<CompOffRequest>();
+    public DbSet<ApprovalHistory> ApprovalHistories => Set<ApprovalHistory>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
