@@ -5,6 +5,7 @@ import UserManagementPage from './pages/AuthenticationAndIdentity/UserManagement
 import EmployeeManagementPage from './pages/EmployeeManagement/EmployeeManagementPage';
 import MyProfilePage from './pages/EmployeeManagement/MyProfilePage';
 import MyTeamPage from './pages/EmployeeManagement/MyTeamPage';
+import LeaveTypeManagementPage from './pages/LeaveTypeManagement/LeaveTypeManagementPage';
 import type { RootState } from './store';
 
 const ProtectedRoute = ({ children }: { children: React.ReactElement }) => {
@@ -49,6 +50,16 @@ export default function App() {
         element={
           <ProtectedRoute>
             <MyTeamPage />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* F-04: Leave Type Management */}
+      <Route
+        path="/admin/leave-types"
+        element={
+          <ProtectedRoute>
+            <LeaveTypeManagementPage />
           </ProtectedRoute>
         }
       />
