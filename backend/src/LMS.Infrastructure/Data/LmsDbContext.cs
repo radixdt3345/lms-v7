@@ -18,6 +18,7 @@ public class LmsDbContext : DbContext
     public DbSet<LeaveBalance> LeaveBalances => Set<LeaveBalance>();
     public DbSet<CompOffCredit> CompOffCredits => Set<CompOffCredit>();
     public DbSet<LeaveApplication> LeaveApplications => Set<LeaveApplication>();
+    public DbSet<CompOffRequest> CompOffRequests => Set<CompOffRequest>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
