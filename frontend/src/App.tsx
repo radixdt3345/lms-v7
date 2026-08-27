@@ -12,6 +12,8 @@ import MyLeaveBalancePage from './pages/LeaveBalance/MyLeaveBalancePage';
 import LeaveBalanceManagementPage from './pages/LeaveBalance/LeaveBalanceManagementPage';
 import MyLeaveApplicationsPage from './pages/LeaveApplication/MyLeaveApplicationsPage';
 import LeaveApplicationManagementPage from './pages/LeaveApplication/LeaveApplicationManagementPage';
+import MyCompOffPage from './pages/CompOff/MyCompOffPage';
+import CompOffManagementPage from './pages/CompOff/CompOffManagementPage';
 import type { RootState } from './store';
 
 const ProtectedRoute = ({ children }: { children: React.ReactElement }) => {
@@ -34,7 +36,10 @@ export default function App() {
       <Route path="/admin/leave-applications" element={<ProtectedRoute><LeaveApplicationManagementPage /></ProtectedRoute>} />
       <Route path="/admin/holidays" element={<ProtectedRoute><PublicHolidayManagementPage /></ProtectedRoute>} />
       <Route path="/admin/audit-trail" element={<ProtectedRoute><AuditTrailPage /></ProtectedRoute>} />
+            <Route path="/comp-off" element={<ProtectedRoute><MyCompOffPage /></ProtectedRoute>} />
+      <Route path="/admin/comp-off" element={<ProtectedRoute><CompOffManagementPage /></ProtectedRoute>} />
       <Route path="/" element={<Navigate to="/login" replace />} />
     </Routes>
   );
 }
+
