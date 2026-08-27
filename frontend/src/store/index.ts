@@ -1,3 +1,4 @@
+import { notificationsReducer } from "./notificationsSlice";
 import { approvalReducer } from "./approvalSlice";
 import { configureStore } from '@reduxjs/toolkit';
 import authenticationReducer from './authenticationSlice';
@@ -19,6 +20,7 @@ export const store = configureStore({
     leaveApplication: leaveApplicationReducer,
     compOff: compOffReducer,
   approvals: approvalReducer,
+  notifications: notificationsReducer,
   },
 });
 
