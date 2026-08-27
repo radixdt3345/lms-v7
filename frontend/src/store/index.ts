@@ -1,10 +1,12 @@
+import { approvalReducer } from "./approvalSlice";
 import { configureStore } from '@reduxjs/toolkit';
 import authenticationReducer from './authenticationSlice';
 import employeeReducer from './employeeSlice';
 import leaveTypeReducer from './leaveTypeSlice';
 import { auditLogReducer } from './auditLogSlice';
 import { leaveBalanceReducer } from './leaveBalanceSlice';
-import { compOffReducer } from './compOffSlice';
+import { compOffReducer } from "./compOffSlice";
+import { approvalReducer } from './compOffSlice';
 import { leaveApplicationReducer } from './leaveApplicationSlice';
 
 export const store = configureStore({
@@ -16,9 +18,9 @@ export const store = configureStore({
     leaveBalance: leaveBalanceReducer,
     leaveApplication: leaveApplicationReducer,
     compOff: compOffReducer,
+  approvals: approvalReducer,
   },
 });
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
-
