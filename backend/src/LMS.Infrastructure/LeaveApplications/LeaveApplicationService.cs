@@ -1,5 +1,6 @@
 using LMS.Infrastructure.Data;
 using LMS.Infrastructure.Data.Entities;
+using LMS.Infrastructure.Email;
 using Microsoft.EntityFrameworkCore;
 
 namespace LMS.Infrastructure.LeaveApplications;
@@ -7,7 +8,13 @@ namespace LMS.Infrastructure.LeaveApplications;
 public sealed class LeaveApplicationService : ILeaveApplicationService
 {
     private readonly LmsDbContext _db;
-    public LeaveApplicationService(LmsDbContext db) => _db = db;
+    private readonly IEmailService _email;
+
+    public LeaveApplicationService(LmsDbContext db, IEmailService email)
+    {
+        _db = db;
+        _email = email;
+    }
 
     private static LeaveApplicationDto ToDto(LeaveApplication a) => new(
         a.Id, a.EmployeeId, a.Employee.Name,
@@ -62,7 +69,19 @@ public sealed class LeaveApplicationService : ILeaveApplicationService
         };
         _db.LeaveApplications.Add(app);
         await _db.SaveChangesAsync();
-        return await GetByIdAsync(app.Id);
+
+        var dto = await GetByIdAsync(app.Id);
+        var employee = await _db.Users.FindAsync(employeeId);
+        if (employee?.Email != null)
+        {
+            _ = _email.SendLeaveAppliedAsync(
+                employee.Email, employee.Name,
+                dto.LeaveTypeName,
+                dto.StartDate.ToString("dd MMM yyyy"),
+                dto.EndDate.ToString("dd MMM yyyy"));
+        }
+
+        return dto;
     }
 
     public async Task<LeaveApplicationDto> ApproveAsync(Guid id, Guid approverId)
@@ -75,7 +94,19 @@ public sealed class LeaveApplicationService : ILeaveApplicationService
         app.ApprovedAt = DateTime.UtcNow;
         app.UpdatedAt = DateTime.UtcNow;
         await _db.SaveChangesAsync();
-        return await GetByIdAsync(id);
+
+        var dto = await GetByIdAsync(id);
+        var employee = await _db.Users.FindAsync(app.EmployeeId);
+        if (employee?.Email != null)
+        {
+            _ = _email.SendLeaveApprovedAsync(
+                employee.Email, employee.Name,
+                dto.LeaveTypeName,
+                dto.StartDate.ToString("dd MMM yyyy"),
+                dto.EndDate.ToString("dd MMM yyyy"));
+        }
+
+        return dto;
     }
 
     public async Task<LeaveApplicationDto> RejectAsync(Guid id, Guid rejectedById, string rejectionReason)
@@ -89,7 +120,20 @@ public sealed class LeaveApplicationService : ILeaveApplicationService
         app.RejectionReason = rejectionReason;
         app.UpdatedAt = DateTime.UtcNow;
         await _db.SaveChangesAsync();
-        return await GetByIdAsync(id);
+
+        var dto = await GetByIdAsync(id);
+        var employee = await _db.Users.FindAsync(app.EmployeeId);
+        if (employee?.Email != null)
+        {
+            _ = _email.SendLeaveRejectedAsync(
+                employee.Email, employee.Name,
+                dto.LeaveTypeName,
+                dto.StartDate.ToString("dd MMM yyyy"),
+                dto.EndDate.ToString("dd MMM yyyy"),
+                rejectionReason);
+        }
+
+        return dto;
     }
 
     public async Task CancelAsync(Guid id, Guid requestingUserId)
@@ -101,5 +145,39 @@ public sealed class LeaveApplicationService : ILeaveApplicationService
         app.Status = "Cancelled";
         app.UpdatedAt = DateTime.UtcNow;
         await _db.SaveChangesAsync();
+
+        var dto = await GetByIdAsync(id);
+        var employee = await _db.Users.FindAsync(requestingUserId);
+        if (employee?.Email != null)
+        {
+            _ = _email.SendLeaveCancelledAsync(
+                employee.Email, employee.Name,
+                dto.LeaveTypeName,
+                dto.StartDate.ToString("dd MMM yyyy"),
+                dto.EndDate.ToString("dd MMM yyyy"));
+        }
+    }
+
+    public async Task<LeaveApplicationDto> RevokeAsync(Guid id, Guid hrAdminId)
+    {
+        var app = await _db.LeaveApplications.FindAsync(id)
+            ?? throw new KeyNotFoundException($"Leave application {id} not found.");
+        if (app.Status != "Approved") throw new InvalidOperationException("Only approved applications can be revoked.");
+        app.Status = "Revoked";
+        app.UpdatedAt = DateTime.UtcNow;
+        await _db.SaveChangesAsync();
+
+        var dto = await GetByIdAsync(id);
+        var employee = await _db.Users.FindAsync(app.EmployeeId);
+        if (employee?.Email != null)
+        {
+            _ = _email.SendLeaveRevokedAsync(
+                employee.Email, employee.Name,
+                dto.LeaveTypeName,
+                dto.StartDate.ToString("dd MMM yyyy"),
+                dto.EndDate.ToString("dd MMM yyyy"));
+        }
+
+        return dto;
     }
 }
