@@ -9,4 +9,5 @@ public interface ILeaveApplicationService
     Task<LeaveApplicationDto> ApproveAsync(Guid id, Guid approverId);
     Task<LeaveApplicationDto> RejectAsync(Guid id, Guid rejectedById, string rejectionReason);
     Task CancelAsync(Guid id, Guid requestingUserId);
+    Task<LeaveApplicationDto> RevokeAsync(Guid id, Guid hrAdminId);
 }
