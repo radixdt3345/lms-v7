@@ -1,5 +1,6 @@
 using LMS.Infrastructure.Data;
 using LMS.Infrastructure.Data.Entities;
+using LMS.Infrastructure.Email;
 using Microsoft.EntityFrameworkCore;
 
 namespace LMS.Infrastructure.BackgroundJobs;
@@ -7,7 +8,13 @@ namespace LMS.Infrastructure.BackgroundJobs;
 public class BackgroundJobService : IBackgroundJobService
 {
     private readonly LmsDbContext _db;
-    public BackgroundJobService(LmsDbContext db) => _db = db;
+    private readonly IEmailService _email;
+
+    public BackgroundJobService(LmsDbContext db, IEmailService email)
+    {
+        _db = db;
+        _email = email;
+    }
 
     public async Task<string> ExpireCompOffCreditsAsync(CancellationToken ct = default)
     {
@@ -80,8 +87,21 @@ public class BackgroundJobService : IBackgroundJobService
             var pending = await _db.LeaveApplications
                 .Where(l => l.Status == "Pending")
                 .CountAsync(ct);
-            // In production, this would send emails/notifications
-            var msg = $"{pending} pending leave applications require review.";
+
+            if (pending > 0)
+            {
+                // Send reminder to all HR_ADMIN and SUPER_ADMIN users
+                var admins = await _db.Users
+                    .Where(u => u.Role == "HR_ADMIN" || u.Role == "SUPER_ADMIN")
+                    .ToListAsync(ct);
+                foreach (var admin in admins)
+                {
+                    if (!string.IsNullOrEmpty(admin.Email))
+                        _ = _email.SendApprovalReminderAsync(admin.Email, admin.Name, pending);
+                }
+            }
+
+            var msg = $"{pending} pending leave applications — reminder emails sent to HR admins.";
             await CompleteJobAsync(log, "Success", msg, ct);
             return msg;
         }
