@@ -1,3 +1,4 @@
+using LMS.Infrastructure.Email;
 using LMS.Infrastructure.BackgroundJobs;
 using LMS.Infrastructure.Reports;
 using LMS.Infrastructure.Dashboard;
@@ -44,6 +45,7 @@ builder.Services.AddScoped<ILeaveApplicationService, LeaveApplicationService>();
 builder.Services.AddScoped<ICompOffService, CompOffService>();
 builder.Services.AddScoped<IApprovalService, ApprovalService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<IEmailService, SmtpEmailService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IBackgroundJobService, BackgroundJobService>();

@@ -1,5 +1,6 @@
 using LMS.Infrastructure.Data;
 using LMS.Infrastructure.Data.Entities;
+using LMS.Infrastructure.Email;
 using Microsoft.EntityFrameworkCore;
 
 namespace LMS.Infrastructure.CompOff;
@@ -7,7 +8,13 @@ namespace LMS.Infrastructure.CompOff;
 public sealed class CompOffService : ICompOffService
 {
     private readonly LmsDbContext _db;
-    public CompOffService(LmsDbContext db) => _db = db;
+    private readonly IEmailService _email;
+
+    public CompOffService(LmsDbContext db, IEmailService email)
+    {
+        _db = db;
+        _email = email;
+    }
 
     private static CompOffRequestDto ToDto(CompOffRequest r) => new(
         r.Id, r.EmployeeId, r.Employee.Name,
@@ -37,8 +44,20 @@ public sealed class CompOffService : ICompOffService
         };
         _db.CompOffRequests.Add(req);
         await _db.SaveChangesAsync();
-        return await _db.CompOffRequests.Include(r => r.Employee).Include(r => r.ApprovedBy)
+
+        var dto = await _db.CompOffRequests.Include(r => r.Employee).Include(r => r.ApprovedBy)
             .Where(r => r.Id == req.Id).Select(r => ToDto(r)).FirstAsync();
+
+        var employee = await _db.Users.FindAsync(employeeId);
+        if (employee?.Email != null)
+        {
+            _ = _email.SendCompOffSubmittedAsync(
+                employee.Email, employee.Name,
+                dto.WorkedDate.ToString("dd MMM yyyy"),
+                dto.CreditDays);
+        }
+
+        return dto;
     }
 
     public async Task<CompOffRequestDto> ApproveRequestAsync(Guid id, Guid approverId)
@@ -55,8 +74,20 @@ public sealed class CompOffService : ICompOffService
             CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow
         });
         await _db.SaveChangesAsync();
-        return await _db.CompOffRequests.Include(r => r.Employee).Include(r => r.ApprovedBy)
+
+        var dto = await _db.CompOffRequests.Include(r => r.Employee).Include(r => r.ApprovedBy)
             .Where(r => r.Id == id).Select(r => ToDto(r)).FirstAsync();
+
+        var employee = await _db.Users.FindAsync(req.EmployeeId);
+        if (employee?.Email != null)
+        {
+            _ = _email.SendCompOffApprovedAsync(
+                employee.Email, employee.Name,
+                dto.WorkedDate.ToString("dd MMM yyyy"),
+                dto.CreditDays);
+        }
+
+        return dto;
     }
 
     public async Task<CompOffRequestDto> RejectRequestAsync(Guid id, Guid rejectedById, string reason)
@@ -65,8 +96,20 @@ public sealed class CompOffService : ICompOffService
         req.Status = "Rejected"; req.ApprovedById = rejectedById;
         req.ApprovedAt = DateTime.UtcNow; req.RejectionReason = reason; req.UpdatedAt = DateTime.UtcNow;
         await _db.SaveChangesAsync();
-        return await _db.CompOffRequests.Include(r => r.Employee).Include(r => r.ApprovedBy)
+
+        var dto = await _db.CompOffRequests.Include(r => r.Employee).Include(r => r.ApprovedBy)
             .Where(r => r.Id == id).Select(r => ToDto(r)).FirstAsync();
+
+        var employee = await _db.Users.FindAsync(req.EmployeeId);
+        if (employee?.Email != null)
+        {
+            _ = _email.SendCompOffRejectedAsync(
+                employee.Email, employee.Name,
+                dto.WorkedDate.ToString("dd MMM yyyy"),
+                reason);
+        }
+
+        return dto;
     }
 
     public async Task<IReadOnlyList<CompOffCreditDto>> GetMyCreditsAsync(Guid userId) =>

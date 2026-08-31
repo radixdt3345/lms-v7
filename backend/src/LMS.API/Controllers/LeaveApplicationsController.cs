@@ -68,4 +68,12 @@ public sealed class LeaveApplicationsController : ControllerBase
         await _svc.CancelAsync(id, CurrentUserId);
         return Ok(new ApiResponse<object?> { Data = null });
     }
+
+    [HttpPut("{id:guid}/revoke")]
+    [Authorize(Roles = "HR_ADMIN,SUPER_ADMIN")]
+    public async Task<IActionResult> Revoke(Guid id)
+    {
+        var result = await _svc.RevokeAsync(id, CurrentUserId);
+        return Ok(new ApiResponse<LeaveApplicationDto> { Data = result });
+    }
 }
